@@ -1,0 +1,23 @@
+#version: '3.8'
+
+services:
+  # Наше приложение
+  web:
+    build: .             # Собрать образ из текущей папки (Dockerfile)
+    ports:
+      - "8000:5000"      # Прокинуть порт: Внешний 8000 -> Внутренний 5000
+    depends_on:
+      - redis            # Запускать только после Redis
+    environment:
+      - REDIS_HOST=redis # Передаем имя хоста (совпадает с именем сервиса ниже)
+
+  # База данных (берем готовый образ)
+  redis:
+    image: redis:alpine  # alpine - супер легкая версия Linux (5MB)
+    restart: always      # Перезапускать, если упал
+    volumes:
+      - redis_data:/data # Сохранять данные, даже если удалить контейнер
+
+# Объявляем "флешку" (volume) для хранения данных базы
+volumes:
+  redis_data:
