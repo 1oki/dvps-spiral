@@ -35,7 +35,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           # Указываем, где лежит Dockerfile (относительно корня репо)
-          context: ./day02
+          # context: ./day02
+          context: .
           push: true
           # Тегируем образ:
           # 1. latest (последняя версия)
