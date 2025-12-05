@@ -44,3 +44,24 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/spiral-app:latest
             ${{ secrets.DOCKER_USERNAME }}/spiral-app:${{ github.sha }}
+
+  # Вторая часть: Деплой (НОВОЕ)
+  deploy:
+    needs: build-and-push  # Ждем окончания сборки
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        # Готовый экшен для SSH команд
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/app
+            # Скачиваем свежую версию образа
+            docker compose pull
+            # Перезапускаем контейнеры (с обновлением)
+            docker compose up -d
+            # Чистим старые ненужные образы (опционально)
+            docker image prune -f

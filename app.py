@@ -14,7 +14,7 @@ def hello():
     try:
         # Увеличиваем счетчик
         count = r.incr('hits')
-        return f"Hello from Docker! I have been seen {count} times.\n"
+        return f"Hello from CD Pipeline! Version 2! Count: {count}.\n"
     except redis.exceptions.ConnectionError as e:
         return f"Error connecting to Redis: {str(e)}\n"
 
